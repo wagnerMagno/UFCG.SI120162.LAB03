@@ -7,10 +7,10 @@ import org.springframework.web.servlet.ModelAndView;
 
 @RestController
 public class IndexController {
-	@RequestMapping(value = "/teste", method = RequestMethod.GET)
+	@RequestMapping(value = "/inicio", method = RequestMethod.GET)
 	public ModelAndView getIndex(){
 		ModelAndView model = new ModelAndView();
-		model.setViewName("teste");
+		model.setViewName("toDoList");
 		return model;
 		
 	}

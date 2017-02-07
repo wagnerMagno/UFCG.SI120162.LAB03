@@ -7,9 +7,10 @@ angular.module("toDoList", []).controller("toDoListCtr", function ($scope) {
 	/*Objetos*/
 	vm.listaTarefas = [];
 	vm.nomeTarefa = "";
-	vm.totalTarefasCompletar = 3;
+	vm.totalTarefasCompletar = vm.listaTarefas.length;
 	vm.totalTarefasTerminada = 0;
 	vm.porcentagem = 0;
+	vm.isIncluir = false;
 	
 	/*Metodos*/
 	
@@ -20,15 +21,52 @@ angular.module("toDoList", []).controller("toDoListCtr", function ($scope) {
 	vm.excluirTarefa = excluirTarefa;
 	vm.calcularPercentual = calcularPercentual;
 	
+	vm.listasTarefas = {};
+	
 	function carregarTarefasDefault() {
 		
-		
-		vm.listaTarefas = 	[		{"nomeTarefa" : "Cortar a grama", "concluida" : "false"},
-									{"nomeTarefa" : "Lavar o carro" , "concluida" : "false"},
-									{"nomeTarefa" : "Dar banho no cachorro" , "concluida" : "false"}
-								];
-														
+		vm.listasTarefas = [{"nomeLista" : "Lista Default", "id" : "1", "lista" : 
+								[{"nomeTarefa" : "Cortar a grama", "concluida" : "false"},
+      		                  	 {"nomeTarefa" : "Lavar o carro" , "concluida" : "false"},
+    		                  	 {"nomeTarefa" : "Dar banho no cachorro" , "concluida" : "false"}
+    		                  	 ]},
+		                    {"nomeLista" : "Lista 2", "id" : "2", "lista" : 
+		                    	[	{"nomeTarefa" : "Jogar", "concluida" : "false"},
+  		                  	 		{"nomeTarefa" : "Correr" , "concluida" : "false"}
+		                    	]
+		                    }];
+		console.log("vm.listasTarefas ", vm.listasTarefas);												
 	};
+	
+	vm.incluirLista = incluirLista;
+	vm.cancelar = cancelar;
+	vm.confirmarIncluir = confirmarIncluir;
+	vm.listaIncluir = {};
+	
+	vm.abrirLista = abrirLista;
+	vm.nomeLista = "To do List";
+	
+	function abrirLista(listaTarefas){
+		console.log("listaTarefas ", listaTarefas);
+		vm.listaTarefas = listaTarefas.lista;
+		vm.nomeLista = listaTarefas.nomeLista;
+		vm.totalTarefasCompletar = vm.listaTarefas.length;
+	}
+	
+	function incluirLista(){
+		vm.isIncluir = true;
+		vm.listaIncluir = {};
+		vm.listaIncluir.nome = "";
+	}
+	
+	function cancelar(){
+		vm.isIncluir = false;
+	}
+	
+	function confirmarIncluir(){
+		console.log("vm.listaIncluir ", vm.listaIncluir);
+		vm.isIncluir = false;
+	}
 	
 	function limparLista(){
 		vm.listaTarefas = [];

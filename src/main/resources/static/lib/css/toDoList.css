@@ -1,6 +1,35 @@
 
+h1{
+	padding-bottom: 18px;	
+}
+
+.menu{
+	float: left;
+	width: 28%;
+}
+
+.viewPrincipal{
+	float: left;
+	width: 72%;
+}
+
+.itemListaMenu {
+   	border: 1px solid aliceblue;
+	width: 50%;
+	margin-left: 26%;
+	padding-left: 0%;
+	background-color: #bababa;
+	border-radius: 15px;
+	margin-top: -2px;
+	cursor: pointer;
+}
+
+ul:hover {
+    background-color: #fff;
+}
+
 .centralizar {
-	width: 700px;
+	width: 75%;
 	text-align: center;
 	margin-top: 20px;
 	margin-left: auto;
@@ -22,7 +51,12 @@ div > label {
 }
 
 .planoFundo{
-	background-color: rgba(0, 111, 196, 0.59);
+	background-color: rgba(255, 234, 235, 0.6);
+}
+
+.planoFundo > fieldset{
+	border-radius: 71px;
+	padding-bottom: 15px;
 }
 
 .campoEntrada{

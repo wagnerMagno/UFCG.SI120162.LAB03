@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns="http://www.thymeleaf.org" ng-app="toDoList">
+	<head>
+		<title>To do list</title>
+		<script src="/lib/angular/angular.js"></script>
+		<script src="/controller/toDoList-controller.js"> </script>
+		<link type="text/css" href="/lib/bootstrap/bootstrap.css" rel="stylesheet"/>
+   		<link type="text/css" href="/lib/css/toDoList.css" rel="stylesheet" />
+		
+	</head>
+
+	<body ng-controller="toDoListCtr as vm" class="planoFundo">
+		
+		
+		<fieldset class="centralizar">
+			
+			<div class="menu" >
+				<h1>Menu</h1>
+				
+				<span>
+					<ul class="itemListaMenu" ng-click="vm.abrirLista(tarefa);" ng-repeat="tarefa in vm.listasTarefas">
+						{{tarefa.nomeLista}}
+					</ul>
+				</span>
+				
+				<button style="margin-top: 100px;" type="button" ng-disabled="" ng-click="vm.incluirLista();" class="btn">Criar Nova Lista</button>
+			</div>
+
+			<div class="viewPrincipal" ng-if="vm.isIncluir" ng-include="'/incluirLista.html'"> </div>
+			
+			<div ng-if="!vm.isIncluir" class="viewPrincipal" ng-include="'/listar.html'"> </div>
+						
+		</fieldset>
+		
+		
+	</body>
+</html> 
