@@ -23,12 +23,21 @@
 					</ul>
 				</span>
 				
-				<button style="margin-top: 100px;" type="button" ng-disabled="" ng-click="vm.incluirLista();" class="btn">Criar Nova Lista</button>
+				<button style="margin-top: 100px;" type="button" ng-click="vm.incluirLista();" class="btn btnMenu">Criar Nova Lista</button>
+				<button style="margin-top: 7px;" type="button" ng-click="vm.chamarExcluirTodasListas();" class="btn btnMenu">Excluir todas Listas</button>
+				<button style="margin-top: 7px;" type="button" ng-click="vm.listarContato();" class="btn btnMenu">Contato</button>
 			</div>
 
-			<div class="viewPrincipal" ng-if="vm.isIncluir" ng-include="'/incluirLista.html'"> </div>
+			<div class="viewPrincipal" ng-if="vm.isIncluir" ng-include="'/view/incluirLista.html'"> </div>
 			
-			<div ng-if="!vm.isIncluir" class="viewPrincipal" ng-include="'/listar.html'"> </div>
+			<div ng-if="vm.isAbrirLista">
+				<div ng-if="!vm.isIncluir" class="viewPrincipal" ng-include="'/view/listar.html'"> </div>
+			</div>			
+			
+			<div class="viewPrincipal" ng-if="vm.isContato" ng-include="'/view/contato.html'"> </div>
+			
+			<div class="viewPrincipal" ng-if="vm.isExcluirTodasListas" ng-include="'/view/confirmacaoExclusao.html'"> </div>
+			
 						
 		</fieldset>
 		

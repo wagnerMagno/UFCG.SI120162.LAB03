@@ -20,9 +20,13 @@
 <table>
 	<tbody >
 		<tr ng-repeat="tarefa in vm.listaTarefas">
-			<td><input style="cursor: pointer; width: 20px;" type="checkbox" ng-model="tarefa.concluida" ng-checked="tarefa.concluida == true" ng-change="vm.contabilizarTarefa()"> </input></td>
+			<td><input style="cursor: pointer; width: 20px;" type="checkbox" ng-model="tarefa.concluida" ng-checked="tarefa.concluida == true" ng-change="vm.contabilizarTarefa(); vm.atualizarDadosLista()"> </input></td>
              		<td ng-class="(tarefa.concluida === true) ? 'tarefaConcluida' : 'tarefaAFazer' " >{{tarefa.nomeTarefa}}</td>
 			<td  ng-click="vm.excluirTarefa(tarefa)"> <img  style="cursor: pointer;" src="lib/img/x.png" title="Excluir Tarefa"  height="15" width="15"> </img></td>
 		</tr>
 	</tbody>
 </table>
+
+<div>
+	<button type="button" ng-click="vm.excluirLista();" class="btn">Excluir Lista</button>
+</div>

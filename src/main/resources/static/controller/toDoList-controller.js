@@ -1,4 +1,4 @@
-angular.module("toDoList", []).controller("toDoListCtr", function ($scope) {
+angular.module("toDoList", []).controller("toDoListCtr", function ($scope, $http) {
 	
 	vm = this;
 	
@@ -11,32 +11,35 @@ angular.module("toDoList", []).controller("toDoListCtr", function ($scope) {
 	vm.totalTarefasTerminada = 0;
 	vm.porcentagem = 0;
 	vm.isIncluir = false;
-	
+	vm.isContato = false;
+	vm.listasTarefas = {};
 	/*Metodos*/
 	
-	vm.carregarTarefasDefault = carregarTarefasDefault;
+	vm.listarListasTarefas = listarListasTarefas;
 	vm.limparLista = limparLista;
 	vm.adicionarTarefa = adicionarTarefa;
 	vm.contabilizarTarefa = contabilizarTarefa;
 	vm.excluirTarefa = excluirTarefa;
 	vm.calcularPercentual = calcularPercentual;
+	vm.listarContato 		= listarContato;
 	
-	vm.listasTarefas = {};
-	
-	function carregarTarefasDefault() {
+	listarListasTarefas();
+	function listarListasTarefas() {
 		
-		vm.listasTarefas = [{"nomeLista" : "Lista Default", "id" : "1", "lista" : 
-								[{"nomeTarefa" : "Cortar a grama", "concluida" : "false"},
-      		                  	 {"nomeTarefa" : "Lavar o carro" , "concluida" : "false"},
-    		                  	 {"nomeTarefa" : "Dar banho no cachorro" , "concluida" : "false"}
-    		                  	 ]},
-		                    {"nomeLista" : "Lista 2", "id" : "2", "lista" : 
-		                    	[	{"nomeTarefa" : "Jogar", "concluida" : "false"},
-  		                  	 		{"nomeTarefa" : "Correr" , "concluida" : "false"}
-		                    	]
-		                    }];
-		console.log("vm.listasTarefas ", vm.listasTarefas);												
+		$http.get("/listarListasTarefas").then(function (response){
+			vm.listasTarefas = response.data;
+		}, function (response){
+		});
+		
+		
 	};
+	
+	function listarContato(){
+		vm.isIncluir = false;
+		vm.isContato = true;
+		vm.isAbrirLista = false;
+		vm.isExcluirTodasListas = false;
+	}
 	
 	vm.incluirLista = incluirLista;
 	vm.cancelar = cancelar;
@@ -45,27 +48,105 @@ angular.module("toDoList", []).controller("toDoListCtr", function ($scope) {
 	
 	vm.abrirLista = abrirLista;
 	vm.nomeLista = "To do List";
+	vm.listaTarefas = [];
+	vm.objTarefasEnvio = {};
+	vm.isAbrirLista = false;
+	vm.excluirLista = excluirLista;
 	
 	function abrirLista(listaTarefas){
-		console.log("listaTarefas ", listaTarefas);
-		vm.listaTarefas = listaTarefas.lista;
+		vm.isIncluir = false;
+		vm.isContato = false;
+		vm.isExcluirTodasListas = false;
+		vm.isAbrirLista = true;
+		vm.listaTarefas = [];
+		
+		vm.objTarefasEnvio = listaTarefas;
+		vm.listaTarefas = listaTarefas.listaTarefas;
+		
 		vm.nomeLista = listaTarefas.nomeLista;
 		vm.totalTarefasCompletar = vm.listaTarefas.length;
+		contabilizarTarefa();
 	}
 	
 	function incluirLista(){
 		vm.isIncluir = true;
+		vm.isContato = false;
+		vm.isExcluirTodasListas = false;
 		vm.listaIncluir = {};
 		vm.listaIncluir.nome = "";
 	}
 	
 	function cancelar(){
 		vm.isIncluir = false;
+		vm.isContato = false;
+		vm.isExcluirTodasListas = false;
+		vm.isAbrirLista = true;
+		contabilizarTarefa();
 	}
 	
 	function confirmarIncluir(){
-		console.log("vm.listaIncluir ", vm.listaIncluir);
 		vm.isIncluir = false;
+		vm.isContato = false;
+		vm.isExcluirTodasListas = false;
+		
+		var lista = {};
+		lista.listaTarefas = [];
+		lista.nomeLista = vm.listaIncluir.nome;
+		
+		$http.post("/criarListaTarefa", lista).then(function (response){
+			vm.isIncluir = true;
+			vm.isContato = false;
+			vm.isExcluirTodasListas = false;
+			listarListasTarefas();
+			vm.listaIncluir = {};
+			vm.listaIncluir.nome = "";
+		}, function (response){
+		});
+		
+	}
+	
+	function excluirLista(){
+		var listasAtualizada = [];
+		
+		for(var i = 0; i < vm.listasTarefas.length; i++){
+			if(vm.listasTarefas[i].id != vm.objTarefasEnvio.id ){
+				listasAtualizada.push(vm.listasTarefas[i]);
+			}
+		}
+		
+		$http.post("/excluirLista", vm.objTarefasEnvio).then(function (response){
+			vm.isIncluir = true;
+			vm.isContato = false;
+			vm.isExcluirTodasListas = false;
+			listarListasTarefas();
+			vm.listaIncluir = {};
+			vm.listaIncluir.nome = "";
+		}, function (response){
+		});
+	}
+	
+	
+	vm.excluirTodasListas = excluirTodasListas;
+	vm.isExcluirTodasListas = false;
+	vm.chamarExcluirTodasListas = chamarExcluirTodasListas;
+	
+	function chamarExcluirTodasListas(){
+		vm.isExcluirTodasListas = true;
+		vm.isIncluir = false;
+		vm.isContato = false;
+		vm.isAbrirLista = false;
+	}
+	
+	function excluirTodasListas(){
+		$http.get("/excluirTodasListas").then(function (response){
+			vm.isIncluir = true;
+			vm.isContato = false;
+			vm.isExcluirTodasListas = false;
+			listarListasTarefas();
+			vm.listaIncluir = {};
+			vm.listaIncluir.nome = "";
+		}, function (response){
+		});
 	}
 	
 	function limparLista(){
@@ -81,7 +162,12 @@ angular.module("toDoList", []).controller("toDoListCtr", function ($scope) {
 		vm.listaTarefas.push(obj);
 		vm.nomeTarefa = "";
 		
-		contabilizarTarefa();
+		$http.post("/atualizarListaTarefa", vm.objTarefasEnvio).then(function (response){
+			contabilizarTarefa();
+		}, function (response){
+		});
+		
+		
 	}
 	
 	function contabilizarTarefa(){
@@ -111,22 +197,37 @@ angular.module("toDoList", []).controller("toDoListCtr", function ($scope) {
 				lista.push(vm.listaTarefas[i]);
 			}
 		}
-		
 		vm.listaTarefas = lista;
-		contabilizarTarefa();
+		vm.objTarefasEnvio.listaTarefas = vm.listaTarefas;
+		
+		$http.post("/atualizarListaTarefa", vm.objTarefasEnvio).then(function (response){
+			contabilizarTarefa();
+		}, function (response){
+		});
 		
 	}
 	
 	function calcularPercentual(){
-		
-		if(vm.listaTarefas.length == 0){
-			vm.porcentagem = 100;
-		}else{
-			vm.porcentagem = (vm.totalTarefasTerminada * 100) / vm.listaTarefas.length;
-		}
-		document.getElementById("pg").value = vm.porcentagem;
+		setTimeout(function(){ 
+			if(vm.listaTarefas.length == 0){
+				vm.porcentagem = 100;
+			}else{
+				vm.porcentagem = (vm.totalTarefasTerminada * 100) / vm.listaTarefas.length;
+			}
+			document.getElementById("pg").value = vm.porcentagem;
+		}, 100);
 	}
 	
-	carregarTarefasDefault();
+	vm.atualizarDadosLista = atualizarDadosLista;
+	function atualizarDadosLista(){
+		
+		vm.objTarefasEnvio.listaTarefas = vm.listaTarefas;
+		
+		$http.post("/atualizarListaTarefa", vm.objTarefasEnvio).then(function (response){
+			contabilizarTarefa();
+		}, function (response){
+		});
+	}
+	
 });
 
