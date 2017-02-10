@@ -28,6 +28,8 @@ angular.module("toDoList", []).controller("toDoListCtr", function ($scope, $http
 		
 		$http.get("/listarListasTarefas").then(function (response){
 			vm.listasTarefas = response.data;
+			contabilizarTarefa();
+			calcularPercentual();
 		}, function (response){
 		});
 		
@@ -171,6 +173,7 @@ angular.module("toDoList", []).controller("toDoListCtr", function ($scope, $http
 	}
 	
 	function contabilizarTarefa(){
+		setTimeout(function(){ 
 			var concluida = 0;
 			var naoConcluida = 0;
 			
@@ -184,8 +187,9 @@ angular.module("toDoList", []).controller("toDoListCtr", function ($scope, $http
 			
 			vm.totalTarefasCompletar = naoConcluida;
 			vm.totalTarefasTerminada = concluida;
-		
+			
 			calcularPercentual();
+		}, 50);
 		
 	}
 	
